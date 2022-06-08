@@ -1,10 +1,16 @@
 .SUFFIXES: .c .o .a
 
-.c.o:
+%.c:
 	gcc -c $<
 
-.o:
+%:
 	gcc -o $@ $^
+
+%.a:
+	ar rs $@ $^
+
+%.so:
+	gcc -shared -o $@ $^
 
 main: main.c libsquare.a libcube.so
 
@@ -13,7 +19,5 @@ square.o: square.c
 cube.o: cube.c
 
 libsquare.a: square.o
-	ar rs $@ $<
 
 libcube.so: cube.o
-	gcc -shared -o $@ $<
