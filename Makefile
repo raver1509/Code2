@@ -1,23 +1,27 @@
 .SUFFIXES: .c .o .a
+vpath %.c src
+vpath %.h incl
 
 %.c:
 	gcc -c $<
 
-%:
-	gcc -o $@ $^
-
-%.a:
+lib/%.a:
+	mkdir -p lib
 	ar rs $@ $^
 
-%.so:
-	gcc -shared -o $@ $^
+lib/%.so:
+	mkdir -p lib
+	gcc -shared -o $@ $<
 
-main: main.c libsquare.a libcube.so
+%:
+	gcc -o $@ $^ -L./lib -I./incl
+
+main: main.c lib/libsquare.a lib/libcube.so
+
+lib/libsquare.a: square.o
+
+lib/libcube.so: cube.o
 
 square.o: square.c
 
 cube.o: cube.c
-
-libsquare.a: square.o
-
-libcube.so: cube.o
